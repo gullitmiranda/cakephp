@@ -30,4 +30,25 @@ App::uses('Controller', 'Controller');
  * @link		http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
 class AppController extends Controller {
+
+  /* Autenticação
+  */
+  public $components = array(
+    'Session',
+    'Auth' => array(
+      'loginRedirect' => array('controller' => 'movies', 'action' => 'index'),
+      'logoutRedirect' => array('controller' => 'pages', 'action' => 'display', 'home'),
+      'authorize' => array('Controller') // Adicionamos essa linha
+    )
+  );
+
+  function beforeFilter() {
+    $this->Auth->allow('index', 'view');
+  }
+  public function isAuthorized($user) {
+    if (isset($user)) {
+      return true; // Os outros usuários não podem
+    }
+    return false;
+  }
 }
